@@ -29,8 +29,24 @@ public class ProductosServicio {
         return productosRepositorio.findAll();
     }
 
-    public Page<ProductosTotalesDTO> traerProductosPaginados(Pageable pageable){
-        Page<ProductosEntidad> productos = productosRepositorio.findAll(pageable);
+//    public Page<ProductosTotalesDTO> traerProductosPaginados(Pageable pageable){
+//        Page<ProductosEntidad> productos = productosRepositorio.findAll(pageable);
+//        Page<ProductosTotalesDTO> productosTotalesDTOS = productos.map(objectEntity -> modelMapper.map(objectEntity, ProductosTotalesDTO.class));
+//
+//        return productosTotalesDTOS;
+//    }
+
+    public Page<ProductosTotalesDTO> traerProductosPaginados(Pageable pageable, int filtro){
+//        Page<ProductosEntidad> productos = filtro == 0? productosRepositorio.findAll(pageable):productosRepositorio.traerProductosPorFiltroDesc(pageable);
+        Page<ProductosEntidad> productos = null;
+        if(filtro == 0){
+            productos = productosRepositorio.findAll(pageable);
+        } else if (filtro == 2) {
+            productos = productosRepositorio.traerProductosPorFiltroDesc(pageable);
+        } else if (filtro == 1) {
+            productos = productosRepositorio.traerProductosPorFiltroAsc(pageable);
+        }
+
         Page<ProductosTotalesDTO> productosTotalesDTOS = productos.map(objectEntity -> modelMapper.map(objectEntity, ProductosTotalesDTO.class));
 
         return productosTotalesDTOS;
@@ -42,10 +58,19 @@ public class ProductosServicio {
         return modelMapper.map(productosEntidad, ProductosTotalesDTO.class);
     }
 
-    public Page<ProductosTotalesDTO> productosPorCategoria(String id, Pageable pageable){
+    public Page<ProductosTotalesDTO> productosPorCategoria(String id, Pageable pageable, int filtro){
         CategoriasEntidad categoriasEntidad = categoriasRepositorio.findById(Integer.valueOf(id)).orElseThrow(null);
-        Page<ProductosEntidad> productosEntidad = productosRepositorio.findByCategoria(categoriasEntidad, pageable);
-        Page<ProductosTotalesDTO> productosTotalesDTOS = productosEntidad.map(objectEntity -> modelMapper.map(objectEntity, ProductosTotalesDTO.class));
+//        Page<ProductosEntidad> productosEntidad = productosRepositorio.findByCategoria(categoriasEntidad, pageable);
+        Page<ProductosEntidad> productos = null;
+        if(filtro == 0){
+            productos = productosRepositorio.findByCategoria(categoriasEntidad, pageable);
+        } else if (filtro == 2) {
+            productos = productosRepositorio.traerProductosPorCategoriasDesc(categoriasEntidad, pageable);
+        } else if (filtro == 1) {
+            productos = productosRepositorio.traerProductosPorCategoriasAsc(categoriasEntidad, pageable);
+        }
+
+        Page<ProductosTotalesDTO> productosTotalesDTOS = productos.map(objectEntity -> modelMapper.map(objectEntity, ProductosTotalesDTO.class));
         return productosTotalesDTOS;
     }
 }

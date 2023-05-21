@@ -25,11 +25,23 @@ public class ProductosControlador {
 //        }
 //    }
 
+//    @GetMapping("/listarProductosPaginados")
+//    public ResponseEntity<Page<ProductosTotalesDTO>> traerProductosPaginados(@RequestParam(name = "page") int page,
+//                                                                             @RequestParam(name = "size") int size){
+//        try{
+//            return new ResponseEntity<>(productosServicio.traerProductosPaginados(PageRequest.of(page,size)),
+//                    HttpStatus.OK);
+//        }catch (Exception e){
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
+
     @GetMapping("/listarProductosPaginados")
     public ResponseEntity<Page<ProductosTotalesDTO>> traerProductosPaginados(@RequestParam(name = "page") int page,
-                                                                             @RequestParam(name = "size") int size){
+                                                                             @RequestParam(name = "size") int size,
+                                                                             @RequestParam(name = "filtro") int filtro){
         try{
-            return new ResponseEntity<>(productosServicio.traerProductosPaginados(PageRequest.of(page,size)),
+            return new ResponseEntity<>(productosServicio.traerProductosPaginados(PageRequest.of(page,size), filtro),
                     HttpStatus.OK);
         }catch (Exception e){
             return ResponseEntity.badRequest().build();
@@ -48,9 +60,10 @@ public class ProductosControlador {
     @GetMapping("/{id}/productos")
     public ResponseEntity<Page<ProductosTotalesDTO>> traerProductosPorCategoriaPaginados(@PathVariable(name = "id") String id,
                                                                                          @RequestParam(name = "page") int page,
-                                                                                         @RequestParam(name = "size") int size){
+                                                                                         @RequestParam(name = "size") int size,
+                                                                                         @RequestParam(name = "filtro") int filtro){
         try{
-            return new ResponseEntity<>(productosServicio.productosPorCategoria(id, PageRequest.of(page,size)), HttpStatus.OK);
+            return new ResponseEntity<>(productosServicio.productosPorCategoria(id, PageRequest.of(page,size), filtro), HttpStatus.OK);
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
