@@ -13,6 +13,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductosRepositorio extends JpaRepository<ProductosEntidad, Integer> {
 
+    @Query(value = "select pd from ProductosEntidad pd where nombre like %:nombre%")
+    Page<ProductosEntidad> findByNombre(Pageable pageable, String nombre);
+
     Page<ProductosEntidad> findByCategoria(CategoriasEntidad categoria, Pageable pageable);
 
     @Query(value = "select pd from ProductosEntidad pd where categoria=:categoria order by precio desc")
@@ -21,10 +24,25 @@ public interface ProductosRepositorio extends JpaRepository<ProductosEntidad, In
     @Query(value = "select pd from ProductosEntidad pd where categoria=:categoria order by precio asc")
     Page<ProductosEntidad> traerProductosPorCategoriasAsc(CategoriasEntidad categoria, Pageable pageable);
 
+    @Query(value = "select pd from ProductosEntidad pd where categoria=:categoria and nombre like %:nombre%")
+    Page<ProductosEntidad> traerProductosPorCategoriasSearch(CategoriasEntidad categoria, Pageable pageable, String nombre);
+
+    @Query(value = "select pd from ProductosEntidad pd where categoria=:categoria and nombre like %:nombre% order by precio desc")
+    Page<ProductosEntidad> traerProductosPorCategoriasSearchDesc(CategoriasEntidad categoria, Pageable pageable, String nombre);
+
+    @Query(value = "select pd from ProductosEntidad pd where categoria=:categoria and nombre like %:nombre% order by precio asc")
+    Page<ProductosEntidad> traerProductosPorCategoriasSearchAsc(CategoriasEntidad categoria, Pageable pageable, String nombre);
+
     @Query(value = "select pd from ProductosEntidad pd order by precio desc")
     Page<ProductosEntidad> traerProductosPorFiltroDesc(Pageable pageable);
 
     @Query(value = "select pd from ProductosEntidad pd order by precio asc")
     Page<ProductosEntidad> traerProductosPorFiltroAsc(Pageable pageable);
+
+    @Query(value = "select pd from ProductosEntidad pd where nombre like %:nombre% order by precio desc")
+    Page<ProductosEntidad> traerProductosPorFiltroSearchDesc(Pageable pageable, String nombre);
+
+    @Query(value = "select pd from ProductosEntidad pd where nombre like %:nombre% order by precio asc")
+    Page<ProductosEntidad> traerProductosPorFiltroSearchAsc(Pageable pageable, String nombre);
 
 }

@@ -52,6 +52,23 @@ public class ProductosServicio {
         return productosTotalesDTOS;
     }
 
+    public Page<ProductosTotalesDTO> traerProductosPaginadosSearch (Pageable pageable, int filtro, String search) {
+//        Page<ProductosEntidad> productos = productosRepositorio.findByNombre(search);
+        Page<ProductosEntidad> productos = null;
+        if(filtro == 0){
+            productos = productosRepositorio.findByNombre(pageable, search);
+        } else if (filtro == 2) {
+            productos = productosRepositorio.traerProductosPorFiltroSearchDesc(pageable, search);
+        } else if (filtro == 1) {
+            productos = productosRepositorio.traerProductosPorFiltroSearchAsc(pageable, search);
+        }
+
+        Page<ProductosTotalesDTO> productosTotalesDTOS = productos.map(objectEntity -> modelMapper.map(objectEntity, ProductosTotalesDTO.class));
+
+        return productosTotalesDTOS;
+
+    }
+
     public ProductosTotalesDTO traerProducto(int id){
         ProductosEntidad productosEntidad = productosRepositorio.findById(id).orElseThrow(null);
 //        return productosRepositorio.findById(id).orElseThrow(null);
@@ -68,6 +85,22 @@ public class ProductosServicio {
             productos = productosRepositorio.traerProductosPorCategoriasDesc(categoriasEntidad, pageable);
         } else if (filtro == 1) {
             productos = productosRepositorio.traerProductosPorCategoriasAsc(categoriasEntidad, pageable);
+        }
+
+        Page<ProductosTotalesDTO> productosTotalesDTOS = productos.map(objectEntity -> modelMapper.map(objectEntity, ProductosTotalesDTO.class));
+        return productosTotalesDTOS;
+    }
+
+    public Page<ProductosTotalesDTO> productosPorCategoriaSearch(String id, Pageable pageable, int filtro, String search){
+        CategoriasEntidad categoriasEntidad = categoriasRepositorio.findById(Integer.valueOf(id)).orElseThrow(null);
+//        Page<ProductosEntidad> productosEntidad = productosRepositorio.findByCategoria(categoriasEntidad, pageable);
+        Page<ProductosEntidad> productos = null;
+        if(filtro == 0){
+            productos = productosRepositorio.traerProductosPorCategoriasSearch(categoriasEntidad, pageable, search);
+        } else if (filtro == 2) {
+            productos = productosRepositorio.traerProductosPorCategoriasSearchDesc(categoriasEntidad, pageable, search);
+        } else if (filtro == 1) {
+            productos = productosRepositorio.traerProductosPorCategoriasSearchAsc(categoriasEntidad, pageable, search);
         }
 
         Page<ProductosTotalesDTO> productosTotalesDTOS = productos.map(objectEntity -> modelMapper.map(objectEntity, ProductosTotalesDTO.class));
